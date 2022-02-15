@@ -1,6 +1,6 @@
 This vignette provides all reproducible codes for our article:
 
-# Statistical_challenges_in_longitudinal_microbiome_data_analysis
+# Longitudinal_microbiome_data_analysis
 
 Saritha Kodikara, Susan Ellul, John Carlin and Kim-Anh Lê Cao 
 
