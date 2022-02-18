@@ -1,0 +1,154 @@
+---
+title: 'Differential Abundance methods- Simulation Results'
+author: 'Saritha Kodikara'
+#date: 'November 9, 2017'
+date: '\today'
+#date: '`r format(Sys.time(), "%d %B, %Y")`'
+output:
+  pdf_document:
+    toc: true    # can remove
+    toc_depth: 3 # can remove
+    number_sections: true
+  highlight: zenburn
+header-includes:
+- \usepackage{fancyhdr}
+- \usepackage{mathtools}
+- \usepackage{xcolor, hyperref}
+- \usepackage{lipsum}
+- \usepackage{caption}
+- \usepackage{diagbox}
+- \usepackage{multirow}
+- \setlength{\headheight}{28pt}
+- \setlength{\footskip}{25pt}
+- \pagestyle{fancy}
+- \renewcommand{\headrulewidth}{0.5pt}
+- \renewcommand{\footrulewidth}{0.5pt}
+- \lhead{\includegraphics[width=8cm,height=1cm]{logo-unimelb}}
+- \cfoot{School of Mathematics and Statistics \\ The University of Melbourne}
+- \rhead{\thepage}
+- \hypersetup{colorlinks   = true, linkcolor=blue, urlcolor  = blue}
+- \fancypagestyle{plain}{\pagestyle{fancy}}
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r global_options, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(dpi = 100, 
+                      echo=TRUE, 
+                      warning=FALSE, message=FALSE, eval = TRUE,
+                      fig.show=TRUE, fig.path= 'Figures/')
+library(ggplot2)
+library(magrittr)
+library(dplyr)
+library(tscount)
+library(ZIBR)
+library("NBZIMM")
+library(splinectomeR)
+library(epiR)
+library(stringr)
+library(tidyr)
+library(patchwork)
+library(grid)
+library(gridExtra)
+library(nlme)
+library(BiocParallel)
+```
+
+
+<!-- Start your report from here. -->
+# Simulation Results- Scenario 1 
+
+In this file, we present results for Taxa 1 simulated under moderate parameter values (i.e. dispersion=0.1 and AR=0.04) from Zero-inflated Beta Regression Model, Negative Binomial Mixed Model, splinectomeR, Zero-inflated Gaussian mixed model and Fast zero-inflated negative binomial mixed model.
+
+```{r}
+meta_df<-readRDS("Data/df_meta.Rdata")
+list_sc1_ra<-readRDS("Data/RA_Scenario1.Rdata")
+list_sc1_co<-readRDS("Data/count_Scenario1.Rdata")
+dfcount<- cbind(meta_df,list_sc1_co[[1]])
+dfRA<- cbind(meta_df,list_sc1_ra[[1]])
+```
+
+
+## Zero-inflated Gaussian mixed model
+
+```{r, results='hide'}
+#Scenario 1 (Relative Abundance)
+fit_zigmm<-lme.zig(Taxa_1~Time+Group+Time*Group, random = ~ 1 | Indiv, data = dfRA)
+summary(fit_zigmm)
+
+#Scenario 1 (Relative Abundance)-with AR
+fit_zigmmAR<-lme.zig(Taxa_1~Time+Group+Time*Group, random = ~ 1 | Indiv, 
+                     data = dfRA, correlation = corAR1())
+summary(fit_zigmmAR)
+
+#Scenario 1 (Counts)
+fit_zigmm_count<-lme.zig(Taxa_1~Time+Group+Time*Group+ offset(log(Library_size)),
+                    random = ~ 1 | Indiv, data = dfcount)
+summary(fit_zigmm_count)
+
+#Scenario 1 (Counts)-with AR
+fit_zigmmAR_count<-lme.zig(Taxa_1~Time+Group+Time*Group+ offset(log(Library_size)),
+                    random = ~ 1 | Indiv, data = dfcount, correlation = corAR1())
+summary(fit_zigmmAR_count)
+```
+
+## Zero-inflated Beta Regression Model
+
+```{r, results='hide'}
+#Scenario 1
+df_cov = data.frame(Time = meta_df$Time, Group=meta_df$Group, 
+                      Time_Group=meta_df$Time*meta_df$Group)
+fit_zibr<-zibr(logistic.cov = data.frame(Time = meta_df$Time, Group=meta_df$Group, 
+                      Time_Group=meta_df$Time*meta_df$Group), 
+                     beta.cov = df_cov, 
+                     Y =list_sc1_ra[[1]]$Taxa_1, subject.ind = meta_df$Indiv,
+                     time.ind =  meta_df$Time)
+fit_zibr
+```
+
+## Negative Binomial Mixed Model
+
+```{r, results='hide'}
+#Scenario 1
+fit_nbmm<-glmm.nb(Taxa_1~Time+Group+Time*Group+ offset(log(Library_size)),
+                    random = ~ 1 | Indiv, data = dfcount)
+summary(fit_nbmm)
+
+#Scenario 1-AR
+fit_nbmmAR<-glmm.nb(Taxa_1~Time+Group+Time*Group+ offset(log(Library_size)),
+                    random = ~ 1 | Indiv, data = dfcount, correlation = corAR1())
+summary(fit_nbmmAR)
+```
+
+## Fast zero-inflated negative binomial mixed model
+
+```{r, results='hide'}
+#Scenario 1
+fit_zinb<-glmm.zinb(Taxa_1~Time+Group+Time*Group+ offset(log(Library_size)),
+                    random = ~ 1 | Indiv, data = dfcount)
+summary(fit_zinb)
+
+#Scenario 1-AR
+fit_zinbAR<-glmm.zinb(Taxa_1~Time+Group+Time*Group+ offset(log(Library_size)),
+                    random = ~ 1 | Indiv, data = dfcount, correlation = corAR1())
+summary(fit_zinbAR)
+
+```
+
+## SplinectomeR
+
+```{r, results='hide'}
+
+#Scenario 1
+# Test for difference in RA change over time between groups 0 and 1
+fit_permuspliner <- permuspliner(data =  dfRA, x = 'Time', y = 'Taxa_1',
+                       cases = 'Indiv', category = 'Group', groups = c('0','1'))
+fit_permuspliner$pval
+
+# Test for non-zero trend in RA over Time
+fit_trendyspliner <- trendyspliner(data = dfRA, x = 'Time', y = 'Taxa_1',
+                        cases = 'Indiv', perms = 999)
+fit_trendyspliner$pval
+```
+
