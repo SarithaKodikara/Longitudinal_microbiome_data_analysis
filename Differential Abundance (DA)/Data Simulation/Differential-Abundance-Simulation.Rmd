@@ -24,7 +24,7 @@ header-includes:
 - \renewcommand{\headrulewidth}{0.5pt}
 - \renewcommand{\footrulewidth}{0.5pt}
 - \lhead{\includegraphics[width=8cm,height=1cm]{logo-unimelb}}
-- \cfoot{\scriptsize MAST30033 Statistical Genomics | School of Mathematics and Statistics \\ The University of Melbourne}
+- \cfoot{School of Mathematics and Statistics \\ The University of Melbourne}
 - \rhead{\thepage}
 - \hypersetup{colorlinks   = true, linkcolor=blue, urlcolor  = blue}
 - \fancypagestyle{plain}{\pagestyle{fancy}}
