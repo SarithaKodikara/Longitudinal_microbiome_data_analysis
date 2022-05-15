@@ -18,7 +18,7 @@ ht_opt(heatmap_column_names_gp = gpar(fontface = "italic"),
 
 mat1<-as.matrix(timeTop[,-c(1:2)])
 rownames(mat1) = timeTop$Family
-colnames(mat1) = c("NBMM","NBMM*","ZINBMM","ZINBMM*",     
+colnames(mat1) = c("NBMM","NBMM*","FZINBMM","FZINBMM*",     
                   "ZIGMM","ZIGMM*","ZIBR","ZIGMMA","ZIGMMA*","SplinectomeR")
 
 mat_with_na1 = mat1
@@ -40,7 +40,7 @@ p1<-Heatmap(mat_with_na1, name = " p value", na_col = "white", col=col_fun,
 
 mat2<-as.matrix(groupTop[,-c(1,2)])
 rownames(mat2) = groupTop$Family
-colnames(mat2) = c("NBMM","NBMM*","ZINBMM","ZINBMM*",     
+colnames(mat2) = c("NBMM","NBMM*","FZINBMM","FZINBMM*",     
                    "ZIGMM","ZIGMM*","ZIBR","ZIGMMA","ZIGMMA*","SplinectomeR")
 
 mat_with_na2 = mat2
@@ -62,11 +62,10 @@ p2<-Heatmap(mat_with_na2, name = " p value", na_col = "white", col=col_fun,
 
 mat3<-as.matrix(interactionTop[,-c(1,2)])
 rownames(mat3) = interactionTop$Family
-colnames(mat3) = c("NBMM","NBMM*","ZINBMM","ZINBMM*",     
+colnames(mat3) = c("NBMM","NBMM*","FZINBMM","FZINBMM*",     
                    "ZIGMM","ZIGMM*","ZIBR","ZIGMMA","ZIGMMA*")
 
 mat_with_na3 = mat3
-mat_with_na3[na_index] = NA
 p3<-Heatmap(mat_with_na3, name = " p value", na_col = "white", col=col_fun,
             row_order = rownames(mat3),
             column_order = colnames(mat3),
