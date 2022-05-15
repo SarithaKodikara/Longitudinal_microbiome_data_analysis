@@ -12,8 +12,8 @@ lt = list(NBMM = timeRes[timeRes$NBMM=="s",]$OTU,
           ZIGMMA_RA = timeRes[timeRes$ZIGMMA_RA=="s",]$OTU,
           ZIGMMA_RA_AR = timeRes[timeRes$ZIGMMA_RA_AR=="s",]$OTU,
           SplinectomeR = timeRes[timeRes$SplinectomeR=="s",]$OTU)
-names(lt) = c("NBMM", "NBMM*", "ZINBMM",
-                     "ZINBMM*", "ZIGMM", "ZIGMM*",
+names(lt) = c("NBMM", "NBMM*", "FZINBMM",
+                     "FZINBMM*", "ZIGMM", "ZIGMM*",
                      "ZIBR", "ZIGMM", "ZIGMM*", "SplinectomeR")
 
 m = make_comb_mat(lt)
@@ -60,8 +60,8 @@ lt = list(NBMM = groupRes[groupRes$NBMM=="s",]$OTU,
           ZIGMMA_RA = groupRes[groupRes$ZIGMMA_RA=="s",]$OTU,
           ZIGMMA_RA_AR = groupRes[groupRes$ZIGMMA_RA_AR=="s",]$OTU,
           SplinectomeR = groupRes[groupRes$SplinectomeR=="s",]$OTU)
-names(lt) = c("NBMM", "NBMM*", "ZINBMM",
-              "ZINBMM*", "ZIGMM", "ZIGMM*",
+names(lt) = c("NBMM", "NBMM*", "FZINBMM",
+              "FZINBMM*", "ZIGMM", "ZIGMM*",
               "ZIBR", "ZIGMM", "ZIGMM*", "SplinectomeR")
 
 m = make_comb_mat(lt)
@@ -107,8 +107,8 @@ lt = list(NBMM = gTimeRes[gTimeRes$NBMM=="s",]$OTU,
           ZIBR = gTimeRes[gTimeRes$ZIBR=="s",]$OTU,
           ZIGMMA_RA = gTimeRes[gTimeRes$ZIGMMA_RA=="s",]$OTU,
           ZIGMMA_RA_AR = gTimeRes[gTimeRes$ZIGMMA_RA_AR=="s",]$OTU)
-names(lt) = c("NBMM", "NBMM*", "ZINBMM",
-              "ZINBMM*", "ZIGMM", "ZIGMM*",
+names(lt) = c("NBMM", "NBMM*", "FZINBMM",
+              "FZINBMM*", "ZIGMM", "ZIGMM*",
               "ZIBR", "ZIGMM", "ZIGMM*")
 
 m = make_comb_mat(lt)
